@@ -1,0 +1,21 @@
+git stash -q --keep-index
+./run_tests.sh
+RESULT=$?
+
+files=$(git diff --name-only --cached)
+pylint=$(pylint $files)
+f=$(flake8 $files)
+
+
+git stash pop -q
+if [ $RESULT -ne 0 ]; then
+echo "Unable to commit due to failing tests!"
+fi
+
+if [ $pylint -ne 0 ]; then
+echo "Unable to commit due to failing tests!"
+fi
+
+if [ $f -ne 0 ]; then
+echo "Unable to commit due to failing tests!"
+fi
