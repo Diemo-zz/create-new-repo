@@ -3,7 +3,7 @@ git stash -q --keep-index
 RESULT=$?
 git stash pop -q
 if [ $RESULT -ne 0 ]; then
-echo "WELL"
+echo "Unable to commit due to failing tests!"
 fi
 
 [ $RESULT -ne 0 ] && exit 1
