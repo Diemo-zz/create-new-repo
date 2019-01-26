@@ -18,18 +18,23 @@ mkdir $local_repo_path
 cd $local_repo_path
 git init
 
-command=$(conda env list | grep $local_repo_path | cut -d " " -f1)
+command=$(conda env list | grep -w $local_repo_path | cut -d " " -f1)
 echo $command
-if  [ -z "${command}" ]; then
+if ! [ -z "${command}" ]; then
 echo "Conda enviroment of the same name found - using that."
 source activate $local_repo_path 
 else
 echo "No conda environment -- creating one under $local_repo_path"
-conda create --name $local_repo_path python=3.6
+#conda create --name $local_repo_path python=3.6
+#pip install pylint
+#pip install flake8
 fi
-pip install pylint
-pip install flake8
 source deactivate
+cd -
+cp run_tests.sh $local_repo_path
+cd $local_repo_path
+git add run_tests.sh
+git commit -m "Initial commit"
 cd -
 
 echo "Installed pylint and flake8 linter tools.   Copying git hooks"
