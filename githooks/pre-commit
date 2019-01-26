@@ -2,7 +2,7 @@ git stash -q --keep-index
 ./run_tests.sh
 RESULT=$?
 
-files=$(git diff --name-only --cached) | grep .py
+files=$(git diff --name-only --cached | grep .py)
 pylint=$(pylint $files)
 f=$(flake8 $files)
 
