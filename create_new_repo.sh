@@ -14,6 +14,9 @@ local_repo_path="./new_repo"
 echo "Creating git repo at $local_repo_path 3" 
 fi
 
+if [ -d "$local_repo_path" ]; then 
+   echo "Directory $local_repo_path already exists! Aborting."; exit 1; 
+fi
 mkdir $local_repo_path
 cd $local_repo_path
 git init
@@ -25,19 +28,26 @@ echo "Conda enviroment of the same name found - using that."
 source activate $local_repo_path 
 else
 echo "No conda environment -- creating one under $local_repo_path"
-#conda create --name $local_repo_path python=3.6
-#pip install pylint
-#pip install flake8
+conda create --name $local_repo_path python=3.6
+echo "Installing pylint"
+pip install pylint
+echo "Installing flake 8"
+pip install flake8
+echo "Installing pytest"
+pip install pytest
 fi
 source deactivate
 cd -
+echo "Copying scripts"
 cp run_tests.sh $local_repo_path
 cp -r githooks $local_repo_path
 cd $local_repo_path
+echo "Adding scripts to git repo"
 git add run_tests.sh
 git add githooks/*
 git commit -m "Initial commit"
+echo "Creating simlink"
+ln -s githooks/pre-commit .git/hooks/pre-commit
 cd -
 
-echo "Installed pylint and flake8 linter tools.   Copying git hooks"
-cp ./githooks/* $local_repo_path/.git/hooks
+echo "New git repo created. Exiting"
