@@ -1,30 +1,10 @@
-git stash -q --keep-index
 ./run_tests.sh
 RESULT=$?
 
-files=$(git diff --name-only --cached | grep .py)
-echo $files
-pylint $files
-pylint=$?
-flake8 $files
-flake=$?
-#echo $pylint
-#f=$(flake8 $files)
-#echo $f
-
-
-git stash pop -q
 if [ $RESULT -ne 0 ]; then
 echo "Unable to commit due to failing tests!"
 exit 1
 fi
 
-if [ $pylint -ne 0 ]; then
-echo "Unable to commit due to failing pylint"
-exit 1
-fi
-
-if [ $flake -ne 0 ]; then
-echo "Unable to commit due to failing flake8!"
-exit 1
-fi
+git-diff-lint -x flake8 -b master
+git-diff-lint -x pylint -b master

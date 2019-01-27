@@ -32,8 +32,10 @@ fi
 source deactivate
 cd -
 cp run_tests.sh $local_repo_path
+cp -r githooks $local_repo_path
 cd $local_repo_path
 git add run_tests.sh
+git add githooks/*
 git commit -m "Initial commit"
 cd -
 
